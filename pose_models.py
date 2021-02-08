@@ -87,7 +87,7 @@ alex_net_model = Sequential([
 ])
 
 # Custom method taken from Previous code that I had used for 
-# this task in an Undergraduate Class, very similar to Le-Net 5 
+# this task in an Undergraduate Class, very similar to Le-Net 5  
 cust_model = Sequential([
     layers.Conv2D(32, (3, 3), activation='relu', \
         input_shape=(48, 40, 1)),

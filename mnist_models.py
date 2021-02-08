@@ -6,8 +6,6 @@ import tensorflow as tf
 from tensorflow.keras.datasets import mnist 
 from tensorflow.keras import layers, optimizers, losses
 from tensorflow.keras.models import Sequential 
-from tensorflow.keras.preprocessing.text import Tokenizer 
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.utils import to_categorical
 import matplotlib.pyplot as plt
 from tensorflow.keras.optimizers import RMSprop
@@ -33,6 +31,7 @@ train_images = train_images.astype('float32') / 255
 test_images = test_images.reshape((10000, 28, 28, 1))
 test_images = test_images.astype('float32') / 255
 
+# Prepare the Data Labels for the model 
 train_labels = to_categorical(train_labels)
 test_labels = to_categorical(test_labels)
 
@@ -79,7 +78,8 @@ alex_net_model = Sequential([
     layers.Dense(10, activation='softmax')
 ])
 
-# Custom method taken from Previous code used for this task 
+# Custom method taken from Previous code that I had used for 
+# this task in an Undergraduate Class, very similar to Le-Net 5  
 cust_model = Sequential([
     layers.Conv2D(32, (3, 3), activation='relu', \
         input_shape=(28, 28, 1)),
@@ -92,10 +92,12 @@ cust_model = Sequential([
     layers.Dense(10, activation='softmax')
 ])
 
+# Optimizers that were tested for the models 
 rmsprop = optimizers.RMSprop(lr=0.0001)
 sgd = optimizers.SGD(learning_rate=0.0001)
 adam = optimizers.Adam(learning_rate=0.0001)
 
+# Compile functions for the 3 methods tested 
 cust_model.compile(optimizer=rmsprop, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
@@ -105,12 +107,11 @@ alex_net_model.compile(optimizer=rmsprop,
 le_net.compile(optimizer=rmsprop, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
-le_net.fit(train_images, train_labels, epochs=20,  \
-    batch_size=32)
-# alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
+# le_net.fit(train_images, train_labels, epochs=20,  \
 #     batch_size=32)
+alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
+    batch_size=32)
 
-# preds = model.predict(test_images)
-evals = le_net.evaluate(x=test_images, y=test_labels)
-# evals = alex_net_model.evaluate(x=test_images, y=test_labels)
+# evals = le_net.evaluate(x=test_images, y=test_labels)
+evals = alex_net_model.evaluate(x=test_images, y=test_labels)
 print(evals)
