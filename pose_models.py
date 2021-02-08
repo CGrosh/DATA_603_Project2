@@ -25,11 +25,12 @@ for i in range(pose_data.shape[3]):
     person_list = [person_imgs[:,:,img] for img in range(13)]
     full_data.append(person_list)
 
+# Format the data and the data labels 
 full_data = np.array(full_data)
 labels = np.array([[img for i in range(13)] for img in range(68)])
 labels = labels.reshape(884,)
-print(full_data.shape)
 
+# Split out the Training and Testing Sets
 test_data, test_labels = [], []
 train_data, train_labels = [], []
 for per in range(len(full_data)):
@@ -38,6 +39,7 @@ for per in range(len(full_data)):
     train_data.append(full_data[per][:10])
     train_labels.append([per for i in range(10)])
 
+# Reshape the data and format the Data labels to be fed to the model 
 test_data, test_labels = np.array(test_data).reshape(204, 48,40,1), \
     to_categorical(np.array(test_labels).reshape(204,))
 train_data, train_labels = np.array(train_data).reshape(680, 48,40,1), \
@@ -55,7 +57,6 @@ le_net = Sequential([
     layers.Dense(84, activation='relu'), 
     layers.Dense(68, activation='softmax')
 ])
-
 
 # AlexNet Attempt 
 alex_net_model = Sequential([
@@ -85,7 +86,8 @@ alex_net_model = Sequential([
     layers.Dense(68, activation='softmax')
 ])
 
-# Custom method taken from Previous code used for this task 
+# Custom method taken from Previous code that I had used for 
+# this task in an Undergraduate Class, very similar to Le-Net 5 
 cust_model = Sequential([
     layers.Conv2D(32, (3, 3), activation='relu', \
         input_shape=(48, 40, 1)),
@@ -98,57 +100,23 @@ cust_model = Sequential([
     layers.Dense(68, activation='softmax')
 ])
 
-# AlexNet Attempt 
-# model = Sequential([
-#     layers.Conv2D(filters=96, kernel_size=(5,5), \
-#         activation='relu', strides=(2,2), input_shape=(48,40, 1)),
-#     # layers.BatchNormalization(),
-#     layers.MaxPool2D(pool_size=(3,3), strides=(1,1)),
-#     layers.Conv2D(filters=256, kernel_size=(3,3), \
-#         activation='relu', padding="same"),
-#     # layers.BatchNormalization(),
-#     layers.MaxPool2D(pool_size=(3,3)),
-#     layers.Conv2D(filters=384, kernel_size=(3,3), \
-#         activation='relu', padding="same"),
-#     # layers.BatchNormalization(),
-#     layers.Conv2D(filters=384, kernel_size=(3,3), \
-#         activation='relu', padding="same"),
-#     # layers.BatchNormalization(),
-#     layers.Conv2D(filters=256, kernel_size=(1,1), \
-#         activation='relu', padding="same"),
-#     # layers.BatchNormalization(),
-#     layers.MaxPool2D(pool_size=(3,3)),
-#     layers.Flatten(),
-#     layers.Dense(4096, activation='relu'),
-#     layers.Dropout(0.5),
-#     layers.Dense(4096, activation='relu'),
-#     layers.Dropout(0.5),
-#     layers.Dense(68, activation='softmax')
-# ])
-
-# model = Sequential()
-# model.add(layers.Conv2D(32, (3, 3), activation='relu', \
-#     input_shape=(48, 40, 1)))
-# model.add(layers.MaxPooling2D((2, 2)))
-# model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-# model.add(layers.MaxPooling2D((2, 2)))
-# model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-# #model.summary()
-# model.add(layers.Flatten())
-# model.add(layers.Dense(64, activation='relu'))
-# model.add(layers.Dense(68, activation='softmax'))
-
+# Three optimizers that were attempted 
 rmsprop = optimizers.RMSprop(lr=0.001)
 sgd = optimizers.SGD(learning_rate=0.0001)
 adam = optimizers.Adam(learning_rate=0.0001)
 
+# Apply the optimizer and the loss function to the best and optimized model 
 alex_net_model.compile(optimizer=adam, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
+
+# Fit the optimized model the to data 
 hist = alex_net_model.fit(train_data, train_labels, \
     epochs=60, batch_size=32)
+# Evaluate the testing data on the model 
 evals = alex_net_model.evaluate(x=test_data, y=test_labels)
-print(train_data.shape)
+
+# The LE-Net Compile function 
 # le_net.compile(optimizer=sgd, 
 #             loss=losses.CategoricalCrossentropy(), 
 #              metrics=['acc'])
@@ -156,20 +124,14 @@ print(train_data.shape)
 #     epochs=60, batch_size=32)
 # evals = le_net.evaluate(x=test_data, y=test_labels)
 print(evals)
-# print(hist.history['acc'])
+
+# Plotting the accuracy of the best model 
 plt.plot(hist.history['acc'])
 plt.title('AlexNet Accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
-# plt.legend(['train', 'test'], loc='upper left')
 plt.show()
-# # summarize history for loss
-# plt.plot(hist.history['loss'])
-# plt.title('model loss')
-# plt.ylabel('loss')
-# plt.xlabel('epoch')
-# # plt.legend(['train', 'test'], loc='upper left')
-# plt.show()
+
 
 
 
