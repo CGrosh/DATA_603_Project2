@@ -25,6 +25,7 @@ def viewImage(x):
 
 # Reshape and normalize the train images 
 train_images = train_images.reshape((60000, 28, 28, 1))
+# Normalize the images, this is possibly a reason why Batch Normalization did show to be effective 
 train_images = train_images.astype('float32') / 255
 
 # Reshape and normalize the test images 
