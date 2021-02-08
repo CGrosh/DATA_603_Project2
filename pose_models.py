@@ -100,6 +100,14 @@ cust_model = Sequential([
     layers.Dense(68, activation='softmax')
 ])
 
+feed_forward = Sequential([
+    layers.Flatten(input_shape=(48,40,1)), 
+    layers.Dense(32, activation='relu'), 
+    layers.Dense(64, activation='relu'), 
+    layers.Dense(128, activation='relu'), 
+    layers.Dense(68, activation='softmax')
+])
+
 # Three optimizers that were attempted 
 rmsprop = optimizers.RMSprop(lr=0.001)
 sgd = optimizers.SGD(learning_rate=0.0001)
@@ -109,13 +117,18 @@ adam = optimizers.Adam(learning_rate=0.0001)
 alex_net_model.compile(optimizer=adam, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
-
+feed_forward.compile(optimizer=adam, 
+            loss=losses.CategoricalCrossentropy(), 
+             metrics=['acc'])
 # Fit the optimized model the to data 
-hist = alex_net_model.fit(train_data, train_labels, \
-    epochs=60, batch_size=32)
+# hist = alex_net_model.fit(train_data, train_labels, \
+#     epochs=60, batch_size=32)
 # Evaluate the testing data on the model 
-evals = alex_net_model.evaluate(x=test_data, y=test_labels)
+# evals = alex_net_model.evaluate(x=test_data, y=test_labels)
 
+hist = feed_forward.fit(train_data, train_labels, \
+    epochs=100, batch_size=32)
+evals = feed_forward.evaluate(x=test_data, y=test_labels)
 # The LE-Net Compile function 
 # le_net.compile(optimizer=sgd, 
 #             loss=losses.CategoricalCrossentropy(), 
@@ -126,11 +139,11 @@ evals = alex_net_model.evaluate(x=test_data, y=test_labels)
 print(evals)
 
 # Plotting the accuracy of the best model 
-plt.plot(hist.history['acc'])
-plt.title('AlexNet Accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.show()
+# plt.plot(hist.history['acc'])
+# plt.title('AlexNet Accuracy')
+# plt.ylabel('accuracy')
+# plt.xlabel('epoch')
+# plt.show()
 
 
 

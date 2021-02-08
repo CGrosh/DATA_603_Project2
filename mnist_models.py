@@ -93,6 +93,14 @@ cust_model = Sequential([
     layers.Dense(10, activation='softmax')
 ])
 
+feed_forward = Sequential([
+    layers.Flatten(input_shape=(28,28,1)), 
+    layers.Dense(32, activation='relu'), 
+    layers.Dense(64, activation='relu'), 
+    layers.Dense(128, activation='relu'), 
+    layers.Dense(10, activation='softmax')
+])
+
 # Optimizers that were tested for the models 
 rmsprop = optimizers.RMSprop(lr=0.0001)
 sgd = optimizers.SGD(learning_rate=0.0001)
@@ -108,11 +116,18 @@ alex_net_model.compile(optimizer=rmsprop,
 le_net.compile(optimizer=rmsprop, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
+feed_forward.compile(optimizer=adam, 
+            loss=losses.CategoricalCrossentropy(), 
+             metrics=['acc'])
 # le_net.fit(train_images, train_labels, epochs=20,  \
 #     batch_size=32)
-alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
+# alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
+#     batch_size=32)
+
+feed_forward.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
     batch_size=32)
 
-# evals = le_net.evaluate(x=test_images, y=test_labels)
-evals = alex_net_model.evaluate(x=test_images, y=test_labels)
+evals = feed_forward.evaluate(x=test_images, y=test_labels)
+# # evals = le_net.evaluate(x=test_images, y=test_labels)
+# evals = alex_net_model.evaluate(x=test_images, y=test_labels)
 print(evals)
