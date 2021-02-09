@@ -93,6 +93,7 @@ cust_model = Sequential([
     layers.Dense(10, activation='softmax')
 ])
 
+# Same feed forward model tested
 feed_forward = Sequential([
     layers.Flatten(input_shape=(28,28,1)), 
     layers.Dense(32, activation='relu'), 
@@ -119,14 +120,17 @@ le_net.compile(optimizer=rmsprop,
 feed_forward.compile(optimizer=adam, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
-# le_net.fit(train_images, train_labels, epochs=20,  \
-#     batch_size=32)
-# alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
-#     batch_size=32)
+
+# Fit the differnt models that were tested 
+le_net.fit(train_images, train_labels, epochs=20,  \
+    batch_size=32)
+alex_net_model.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
+    batch_size=32)
 
 feed_forward.fit(train_images, train_labels, epochs=20, steps_per_epoch=100, \
     batch_size=32)
 
+# Evaluate on the testing data with the differnt models
 evals = feed_forward.evaluate(x=test_images, y=test_labels)
 # # evals = le_net.evaluate(x=test_images, y=test_labels)
 # evals = alex_net_model.evaluate(x=test_images, y=test_labels)

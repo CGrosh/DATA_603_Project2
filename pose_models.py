@@ -100,6 +100,7 @@ cust_model = Sequential([
     layers.Dense(68, activation='softmax')
 ])
 
+# Feed Forward Model Test
 feed_forward = Sequential([
     layers.Flatten(input_shape=(48,40,1)), 
     layers.Dense(32, activation='relu'), 
@@ -120,12 +121,14 @@ alex_net_model.compile(optimizer=adam,
 feed_forward.compile(optimizer=adam, 
             loss=losses.CategoricalCrossentropy(), 
              metrics=['acc'])
-# Fit the optimized model the to data 
-# hist = alex_net_model.fit(train_data, train_labels, \
-#     epochs=60, batch_size=32)
-# Evaluate the testing data on the model 
-# evals = alex_net_model.evaluate(x=test_data, y=test_labels)
 
+# Fit the optimized model the to data 
+hist = alex_net_model.fit(train_data, train_labels, \
+    epochs=60, batch_size=32)
+# Evaluate the testing data on the model 
+evals = alex_net_model.evaluate(x=test_data, y=test_labels)
+
+# The fit call for the Feed Forward Model 
 hist = feed_forward.fit(train_data, train_labels, \
     epochs=100, batch_size=32)
 evals = feed_forward.evaluate(x=test_data, y=test_labels)
@@ -136,7 +139,7 @@ evals = feed_forward.evaluate(x=test_data, y=test_labels)
 # hist = le_net.fit(train_data, train_labels, \
 #     epochs=60, batch_size=32)
 # evals = le_net.evaluate(x=test_data, y=test_labels)
-print(evals)
+# print(evals)
 
 # Plotting the accuracy of the best model 
 # plt.plot(hist.history['acc'])
